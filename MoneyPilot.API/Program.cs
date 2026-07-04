@@ -1,4 +1,27 @@
+using Microsoft.EntityFrameworkCore;
+using MoneyPilot.Application;
+using MoneyPilot.Infrastructure;
+using MoneyPilot.Infrastructure.Repos;
+using MoneyPilot.Shared.Common;
+using MoneyPilot.Shared.Helpers;
+using System.Reflection;
+
 var builder = WebApplication.CreateBuilder(args);
+var configuration = new ConfigurationBuilder()
+                    .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+                    .AddEnvironmentVariables()
+                    .Build();
+var environment = configuration.GetValue<string>("ENVIRONMENT");
+var isDevelopment = !string.IsNullOrEmpty(environment) && environment.Equals(
+            "DEVELOPMENT",
+            System.StringComparison.InvariantCultureIgnoreCase);
+
+builder.Services.RegisterHandlers(Assembly.Load("MoneyPilot.Application"));
+var connectionString = ConnectionStringsHelper.GetDbConnectionString();
+builder.Services.AddDbContext<MoneyPilotContext>(
+    v => v.UseSqlServer(connectionString,
+    b => b.MigrationsAssembly("MoneyPilot.Infrastructure")));
+builder.Services.AddScoped<IMoneyPilotRepo, MoneyPilotRepo>();
 
 // Add services to the container.
 
@@ -24,5 +47,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+if (builder.Configuration.GetValue<bool>("RunMigration"))
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<MoneyPilotContext>();
+    db.Database.Migrate();
+    //return; // Exit after migration
+}
 
 app.Run();

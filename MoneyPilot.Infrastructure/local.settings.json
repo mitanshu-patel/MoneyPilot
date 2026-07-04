@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "SystemDbConnectionString": "Server=localhost\\SQLEXPRESS;Database=moneypilot;Trusted_Connection=True;TrustServerCertificate=true",
+  }
+}

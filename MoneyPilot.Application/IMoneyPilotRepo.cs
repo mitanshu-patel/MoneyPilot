@@ -1,6 +1,6 @@
 ﻿namespace MoneyPilot.Application
 {
-    public class Class1
+    public interface IMoneyPilotRepo
     {
 
     }

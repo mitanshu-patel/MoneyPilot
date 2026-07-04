@@ -11,4 +11,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MoneyPilot.Application\MoneyPilot.Application.csproj" />
+    <ProjectReference Include="..\MoneyPilot.Domain\MoneyPilot.Domain.csproj" />
+    <ProjectReference Include="..\MoneyPilot.Infrastructure\MoneyPilot.Infrastructure.csproj" />
+    <ProjectReference Include="..\MoneyPilot.Shared\MoneyPilot.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
