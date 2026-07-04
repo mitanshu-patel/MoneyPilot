@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyPilot.Domain", "MoneyP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyPilot.Infrastructure", "MoneyPilot.Infrastructure\MoneyPilot.Infrastructure.csproj", "{B0DBF453-8BFF-4D32-B51C-906A272A174C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyPilot.Shared", "MoneyPilot.Shared\MoneyPilot.Shared.csproj", "{B10FD3FC-436A-45CA-A2B6-87FE30CC0057}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{B0DBF453-8BFF-4D32-B51C-906A272A174C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0DBF453-8BFF-4D32-B51C-906A272A174C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0DBF453-8BFF-4D32-B51C-906A272A174C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B10FD3FC-436A-45CA-A2B6-87FE30CC0057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B10FD3FC-436A-45CA-A2B6-87FE30CC0057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B10FD3FC-436A-45CA-A2B6-87FE30CC0057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B10FD3FC-436A-45CA-A2B6-87FE30CC0057}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
