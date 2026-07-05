@@ -58,3 +58,5 @@ nunit-*.xml
 /MoneyPilot.API/.vs
 /.vs/MoneyPilot
 /.vs/ProjectEvaluation
+/MoneyPilot.API/local.settings.json
+/MoneyPilot.Infrastructure/local.settings.json
