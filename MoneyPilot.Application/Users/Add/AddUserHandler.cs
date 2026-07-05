@@ -16,7 +16,7 @@ namespace MoneyPilot.Application.Users.Add
                 return CustomHttpResult.BadRequest<AddUserResult>("User with the same email already exists.");
             }
 
-            var user = new User { Email = command.Email, Password = command.Password.ComputeSHA256Hash(), };
+            var user = new User { Email = command.Email, Password = command.Password.ComputeSHA256Hash(), UserOId = Guid.NewGuid() };
             var userId = await moneyPilotRepo.AddNewUser(user);
             return CustomHttpResult.Ok<AddUserResult>(new(userId));
         }

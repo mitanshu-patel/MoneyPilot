@@ -6,5 +6,9 @@ namespace MoneyPilot.Application
     {
         public IQueryable<User> GetUsers();
         public Task<int> AddNewUser(User user);
+
+        public IQueryable<RefreshToken> GetRefreshTokens();
+
+        public Task SaveRefreshTokenAsync(RefreshToken refreshToken);
     }
 }

@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using MoneyPilot.Application;
+using MoneyPilot.Application.Services;
 using MoneyPilot.Infrastructure;
 using MoneyPilot.Infrastructure.Repos;
+using MoneyPilot.Infrastructure.Services;
 using MoneyPilot.Shared.Common;
 using MoneyPilot.Shared.Contracts;
+using MoneyPilot.Shared.EncryptionDecryption;
 using MoneyPilot.Shared.Helpers;
 using MoneyPilot.Shared.Services;
 using System.Reflection;
@@ -25,6 +28,9 @@ builder.Services.AddDbContext<MoneyPilotContext>(
     v => v.UseSqlServer(connectionString,
     b => b.MigrationsAssembly("MoneyPilot.Infrastructure")));
 builder.Services.AddScoped<IMoneyPilotRepo, MoneyPilotRepo>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddSingleton<IEncryptionDecryptionService, EncryptionDecryptionService>();
+builder.Services.Configure<EncryptionDecryptionServiceOptions>(configuration.GetSection("Encryption"));
 
 // Add services to the container.
 
