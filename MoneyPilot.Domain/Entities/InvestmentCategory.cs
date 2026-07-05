@@ -9,5 +9,7 @@ namespace MoneyPilot.Domain.Entities
         public int Id { get; set; }
 
         public string Category { get; set; }
+
+        public List<Investment> Investments { get; set; } = [];
     }
 }

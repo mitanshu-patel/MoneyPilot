@@ -25,4 +25,10 @@
     <ProjectReference Include="..\MoneyPilot.Shared\MoneyPilot.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="local.settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

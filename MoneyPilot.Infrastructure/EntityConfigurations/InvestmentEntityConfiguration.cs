@@ -12,8 +12,10 @@ namespace MoneyPilot.Infrastructure.EntityConfigurations
         public void Configure(EntityTypeBuilder<Investment> builder)
         {
             builder.HasKey(v => v.Id);
-            builder.Property(v => v.Category).IsRequired();
-            builder.HasIndex(v => v.Category).IsUnique();
+            builder.HasOne(e => e.Category)
+                .WithMany(v => v.Investments)
+                .HasForeignKey(e => e.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(i => i.Transaction)
                 .WithMany(a => a.Investments)
                 .HasForeignKey(i => i.TransactionId)

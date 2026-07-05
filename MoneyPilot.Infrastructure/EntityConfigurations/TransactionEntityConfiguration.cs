@@ -23,7 +23,7 @@ namespace MoneyPilot.Infrastructure.EntityConfigurations
             builder.HasOne(e => e.User)
                 .WithMany()
                 .HasForeignKey(e => e.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
