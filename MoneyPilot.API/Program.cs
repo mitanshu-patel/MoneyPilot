@@ -3,7 +3,9 @@ using MoneyPilot.Application;
 using MoneyPilot.Infrastructure;
 using MoneyPilot.Infrastructure.Repos;
 using MoneyPilot.Shared.Common;
+using MoneyPilot.Shared.Contracts;
 using MoneyPilot.Shared.Helpers;
+using MoneyPilot.Shared.Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,7 @@ var isDevelopment = !string.IsNullOrEmpty(environment) && environment.Equals(
             "DEVELOPMENT",
             System.StringComparison.InvariantCultureIgnoreCase);
 
+builder.Services.AddScoped<IMediator, Mediator>();
 builder.Services.RegisterHandlers(Assembly.Load("MoneyPilot.Application"));
 var connectionString = ConnectionStringsHelper.GetDbConnectionString();
 builder.Services.AddDbContext<MoneyPilotContext>(

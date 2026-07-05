@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MoneyPilot.Domain\MoneyPilot.Domain.csproj" />
+    <ProjectReference Include="..\MoneyPilot.Shared\MoneyPilot.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
