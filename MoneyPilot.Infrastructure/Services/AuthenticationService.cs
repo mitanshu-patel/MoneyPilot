@@ -5,6 +5,7 @@ using MoneyPilot.Application;
 using MoneyPilot.Application.Common;
 using MoneyPilot.Application.Services;
 using MoneyPilot.Domain.Entities;
+using MoneyPilot.Shared.Common;
 using MoneyPilot.Shared.EncryptionDecryption;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -29,11 +30,11 @@ namespace MoneyPilot.Infrastructure.Services
             this.moneyPilotRepo = moneyPilotRepo;
             this.configuration = configuration;
             this.encryptionDecryptionService = encryptionDecryptionService;
-            this.authSecret = this.configuration.GetValue<string>("AuthSecret") ?? string.Empty;
-            this.audience = this.configuration.GetValue<string>("Audience") ?? string.Empty;
-            this.issuer = this.configuration.GetValue<string>("Issuer") ?? string.Empty;
-            this.accessTokenExpirationMinutes = Convert.ToInt16(this.configuration.GetValue<string>("ExpirationMinutes"));
-            this.refreshTokenExpirationMinutes = Convert.ToInt16(this.configuration.GetValue<string>("RefreshTokenExpirationMinutes"));
+            this.authSecret = this.configuration.GetConfigurationValue<string>("AuthSecret") ?? string.Empty;
+            this.audience = this.configuration.GetConfigurationValue<string>("Audience") ?? string.Empty;
+            this.issuer = this.configuration.GetConfigurationValue<string>("Issuer") ?? string.Empty;
+            this.accessTokenExpirationMinutes = Convert.ToInt16(this.configuration.GetConfigurationValue<string>("ExpirationMinutes"));
+            this.refreshTokenExpirationMinutes = Convert.ToInt16(this.configuration.GetConfigurationValue<string>("RefreshTokenExpirationMinutes"));
         }
         public async Task<(RefreshTokenResponse? RefreshToken, string ErrorMessage)> GenerateJwtAndRefreshTokenAsync(string accessToken, string refreshToken)
         {

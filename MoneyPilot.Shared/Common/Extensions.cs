@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,17 @@ namespace MoneyPilot.Shared.Common
         public static CustomResponse<TResult> GetValidationResult<TResult>(this ValidationResult validationResult)
         {
             return CustomHttpResult.BadRequest<TResult>("One or more validation errors", validationResult.Errors.GetValidationErrors());
+        }
+
+        public static T? GetConfigurationValue<T>(this IConfiguration configuration, string valueKey)
+        {
+            var valueSection = configuration.GetSection("Values");
+            if (valueSection == null)
+            {
+                return configuration.GetValue<T>(valueKey);
+            }
+
+            return valueSection.GetValue<T>(valueKey);
         }
     }
 }

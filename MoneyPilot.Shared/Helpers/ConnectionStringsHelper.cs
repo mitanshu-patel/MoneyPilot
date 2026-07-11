@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using MoneyPilot.Shared.Common;
 
 namespace MoneyPilot.Shared.Helpers
 {
@@ -12,7 +13,7 @@ namespace MoneyPilot.Shared.Helpers
                     .Build();
 
             // Azure App Service sets connection strings as SQLCONNSTR_<name>
-            var azureConnStr = configuration.GetValue<string>("SQLCONNSTR_SystemDbConnectionString");
+            var azureConnStr = configuration.GetConfigurationValue<string>("SQLCONNSTR_SystemDbConnectionString");
             if (!string.IsNullOrEmpty(azureConnStr))
                 return azureConnStr;
 
@@ -20,10 +21,10 @@ namespace MoneyPilot.Shared.Helpers
             if (!string.IsNullOrEmpty(connectionString))
                 return connectionString;
 
-            var serverName = configuration.GetValue<string>("DB_SERVER_NAME") ?? "localhost";
-            var dbName = configuration.GetValue<string>("DB_NAME") ?? "moneypilot";
-            var dbUser = configuration.GetValue<string>("DB_USER") ?? "sa";
-            var dbPassword = configuration.GetValue<string>("DB_PASSWORD") ?? "admin123";
+            var serverName = configuration.GetConfigurationValue<string>("DB_SERVER_NAME") ?? "localhost";
+            var dbName = configuration.GetConfigurationValue<string>("DB_NAME") ?? "moneypilot";
+            var dbUser = configuration.GetConfigurationValue<string>("DB_USER") ?? "sa";
+            var dbPassword = configuration.GetConfigurationValue<string>("DB_PASSWORD") ?? "admin123";
             var defaultConnectionString = $"Server={serverName};Database={dbName};User Id={dbUser};Password={dbPassword};Encrypt=False;TrustServerCertificate=True";
             return defaultConnectionString;
         }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MoneyPilot.API;
 using MoneyPilot.Application;
 using MoneyPilot.Application.Services;
 using MoneyPilot.Infrastructure;
@@ -12,32 +13,10 @@ using MoneyPilot.Shared.Services;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-var configuration = new ConfigurationBuilder()
-                    .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
-                    .AddEnvironmentVariables()
-                    .Build();
-var environment = configuration.GetValue<string>("ENVIRONMENT");
-var isDevelopment = !string.IsNullOrEmpty(environment) && environment.Equals(
-            "DEVELOPMENT",
-            System.StringComparison.InvariantCultureIgnoreCase);
 
-builder.Services.AddScoped<IMediator, Mediator>();
-builder.Services.RegisterHandlers(Assembly.Load("MoneyPilot.Application"));
-var connectionString = ConnectionStringsHelper.GetDbConnectionString();
-builder.Services.AddDbContext<MoneyPilotContext>(
-    v => v.UseSqlServer(connectionString,
-    b => b.MigrationsAssembly("MoneyPilot.Infrastructure")));
-builder.Services.AddScoped<IMoneyPilotRepo, MoneyPilotRepo>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
-builder.Services.AddSingleton<IEncryptionDecryptionService, EncryptionDecryptionService>();
-builder.Services.Configure<EncryptionDecryptionServiceOptions>(configuration.GetSection("Encryption"));
+builder.Configuration.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.DefaultRegistrations(builder.Configuration);
 
 var app = builder.Build();
 

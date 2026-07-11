@@ -17,7 +17,7 @@ namespace MoneyPilot.Application.Users.Add
             }
 
             var user = new User { Email = command.Email, Password = command.Password.ComputeSHA256Hash(), UserOId = Guid.NewGuid() };
-            var userId = await moneyPilotRepo.AddNewUser(user);
+            var userId = await moneyPilotRepo.AddNewUserAsync(user);
             return CustomHttpResult.Ok<AddUserResult>(new(userId));
         }
 

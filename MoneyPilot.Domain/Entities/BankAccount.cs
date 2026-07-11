@@ -10,6 +10,8 @@ namespace MoneyPilot.Domain.Entities
 
         public string HolderName { get; set; }
 
+        public long AccountNumber { get; set; } = 0;
+
         public decimal Balance { get; set; }
 
         public int UserId { get; set; }

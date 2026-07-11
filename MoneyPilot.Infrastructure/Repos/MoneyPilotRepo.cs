@@ -8,16 +8,38 @@ namespace MoneyPilot.Infrastructure.Repos
 {
     public class MoneyPilotRepo(MoneyPilotContext moneyPilotContext) : IMoneyPilotRepo
     {
-        public async Task<int> AddNewUser(User user)
+        public async Task<int> AddNewUserAsync(User user)
         {
            moneyPilotContext.Users.Add(user);
            await moneyPilotContext.SaveChangesAsync();
            return user.Id;
         }
 
+        public IQueryable<BankAccount> GetBankAccounts()
+        {
+            return moneyPilotContext.BankAccounts.AsQueryable();
+        }
+
+        public async Task AddBankAccountAsync(BankAccount bankAccount)
+        {
+            moneyPilotContext.BankAccounts.Add(bankAccount);
+            await moneyPilotContext.SaveChangesAsync();
+        }
+
+        public IQueryable<RefreshToken> GetRefreshTokens()
+        {
+            return moneyPilotContext.RefreshTokens.AsQueryable();
+        }
+
         public IQueryable<User> GetUsers()
         {
             return moneyPilotContext.Users.AsQueryable();
+        }
+
+        public async Task SaveRefreshTokenAsync(RefreshToken refreshToken)
+        {
+            moneyPilotContext.RefreshTokens.Add(refreshToken);
+            await moneyPilotContext.SaveChangesAsync();
         }
     }
 }

@@ -18,6 +18,7 @@ namespace MoneyPilot.Infrastructure.EntityConfigurations
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.Property(v => v.HolderName).IsRequired();
+            builder.Property(v => v.AccountNumber).IsRequired();
             builder.Property(v => v.HolderName).HasMaxLength(100);
             builder.Property(v => v.Balance).IsRequired().HasColumnType("decimal(18,2)");
         }
