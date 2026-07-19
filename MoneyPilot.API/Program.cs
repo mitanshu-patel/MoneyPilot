@@ -17,6 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true);
 
 builder.Services.DefaultRegistrations(builder.Configuration);
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Value.Split(";")).AllowAnyHeader().AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -28,8 +35,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors();
-app.UseHttpsRedirection();
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
