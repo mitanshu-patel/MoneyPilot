@@ -41,5 +41,15 @@ namespace MoneyPilot.Infrastructure.Repos
             moneyPilotContext.RefreshTokens.Add(refreshToken);
             await moneyPilotContext.SaveChangesAsync();
         }
+
+        public IQueryable<InvestmentCategory> GetInvestmentCategories()
+        {
+           return moneyPilotContext.InvestmentCategories.AsQueryable();
+        }
+
+        public IQueryable<ExpenseCategory> GetExpenseCategories()
+        {
+            return moneyPilotContext.ExpenseCategories.AsQueryable();
+        }
     }
 }

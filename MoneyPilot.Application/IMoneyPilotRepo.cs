@@ -14,5 +14,9 @@ namespace MoneyPilot.Application
         public IQueryable<BankAccount> GetBankAccounts();
 
         public Task AddBankAccountAsync(BankAccount bankAccount);
+
+        public IQueryable<InvestmentCategory> GetInvestmentCategories();
+
+        public IQueryable<ExpenseCategory> GetExpenseCategories();
     }
 }

@@ -19,7 +19,7 @@ namespace MoneyPilot.Application.Users.Authenticate
             {
                 var hashPassword = command.Password.ComputeSHA256Hash();
                 var user = await moneyPilotRepo.GetUsers().Where(v => v.Email.Equals(command.Email))
-                            .Select(v => new { v.Email, v.UserOId, v.Password })
+                            .Select(v => new { v.Id, v.Email, v.UserOId, v.Password })
                             .FirstOrDefaultAsync();
                 if (user == null)
                 {
@@ -30,12 +30,12 @@ namespace MoneyPilot.Application.Users.Authenticate
                 if (user.Password != hashPassword)
                 {
                     logger.LogWarning("Invalid password for Email: {Email}", command.Email);
-                    return CustomHttpResult.UnAuthorized<AuthenticateUserResult>("Invalid password.");
+                    return CustomHttpResult.UnAuthorized<AuthenticateUserResult>("Invalid Email or Password.");
                 }
 
                 var tokenDetail = await authenticationService.GenerateNewTokenAsync(user.UserOId, user.Email);
                 logger.LogInformation("User authenticated successfully for Email: {Email}", command.Email);
-                return CustomHttpResult.Ok<AuthenticateUserResult>(new(tokenDetail));
+                return CustomHttpResult.Ok<AuthenticateUserResult>(new(user.Id, tokenDetail));
             }
             catch (Exception ex)
             {

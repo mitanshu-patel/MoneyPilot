@@ -1,4 +1,4 @@
-﻿using MoneyPilot.Application.Common;
+﻿using MoneyPilot.Application.Common.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

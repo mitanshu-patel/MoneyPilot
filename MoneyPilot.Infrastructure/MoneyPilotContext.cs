@@ -16,6 +16,8 @@ namespace MoneyPilot.Infrastructure
         public DbSet<User> Users { get; set; }
 
         public DbSet<ExpenseCategory> ExpenseCategories { get; set; }
+
+        public DbSet<InvestmentCategory> InvestmentCategories { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

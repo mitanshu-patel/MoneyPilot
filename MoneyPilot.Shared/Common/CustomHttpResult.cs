@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace MoneyPilot.Shared.Common
 {
@@ -7,31 +8,17 @@ namespace MoneyPilot.Shared.Common
     {
         public static IActionResult GetResponse<T>(this CustomResponse<T> customResponse)
         {
-            if (customResponse.ResponseCode == System.Net.HttpStatusCode.BadRequest)
+            var errorDetail = new
             {
-                return new BadRequestObjectResult(customResponse.Errors != null ? customResponse.Errors : customResponse.ErrorMessage);
-            }
-            else if (customResponse.ResponseCode == System.Net.HttpStatusCode.NotFound)
+                Errors = customResponse.Errors,
+                ErrorMessage = customResponse.ErrorMessage,
+                StatusCode = (int)customResponse.ResponseCode,
+            };
+
+            return new ObjectResult(customResponse.ResponseCode == System.Net.HttpStatusCode.OK ? customResponse.Data : errorDetail)
             {
-                return new NotFoundObjectResult(customResponse.ErrorMessage);
-            }
-            else if (customResponse.ResponseCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                return new UnauthorizedResult();
-            }
-            else if (customResponse.ResponseCode == System.Net.HttpStatusCode.Forbidden)
-            {
-                return new ForbidResult();
-            }
-            else if (customResponse.ResponseCode == System.Net.HttpStatusCode.InternalServerError)
-            {
-                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-            }
-            else if (customResponse.ResponseCode == System.Net.HttpStatusCode.TooManyRequests)
-            {
-                return new StatusCodeResult(StatusCodes.Status429TooManyRequests);
-            }
-            return new OkObjectResult(customResponse.Data);
+                StatusCode = (int)customResponse.ResponseCode
+            };
         }
 
         public static CustomResponse<T> NotFound<T>(string errorMessage)

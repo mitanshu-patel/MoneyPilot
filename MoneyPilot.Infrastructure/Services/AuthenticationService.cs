@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MoneyPilot.Application;
-using MoneyPilot.Application.Common;
+using MoneyPilot.Application.Common.DTOs;
 using MoneyPilot.Application.Services;
 using MoneyPilot.Domain.Entities;
 using MoneyPilot.Shared.Common;

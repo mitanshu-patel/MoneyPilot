@@ -21,7 +21,7 @@ namespace MoneyPilot.Application.BankAccounts.Add
                 if (!userExist)
                 {
                     logger.LogWarning("User not found for UserId: {UserId}", command.UserId);
-                    throw new InvalidOperationException("User not found.");
+                    return CustomHttpResult.NotFound<AddAccountResult>("User not found.");
                 }
 
                 var accountExists = await moneyPilotRepo.GetBankAccounts().AnyAsync(t => t.AccountNumber == command.AccountNumber);
