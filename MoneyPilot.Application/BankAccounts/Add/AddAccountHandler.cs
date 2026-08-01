@@ -39,7 +39,7 @@ namespace MoneyPilot.Application.BankAccounts.Add
                     Balance = command.Balance
                 };
 
-                await moneyPilotRepo.AddBankAccountAsync(account);
+                await moneyPilotRepo.SaveBankAccountAsync(account);
                 logger.LogInformation("Account added successfully for UserId: {UserId}, AccountNumber: {AccountNumber}", command.UserId, command.AccountNumber);
                 return CustomHttpResult.Ok<AddAccountResult>(new(account.Id));
             }

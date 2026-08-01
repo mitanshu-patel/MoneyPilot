@@ -20,9 +20,12 @@ namespace MoneyPilot.Infrastructure.Repos
             return moneyPilotContext.BankAccounts.AsQueryable();
         }
 
-        public async Task AddBankAccountAsync(BankAccount bankAccount)
+        public async Task SaveBankAccountAsync(BankAccount bankAccount)
         {
-            moneyPilotContext.BankAccounts.Add(bankAccount);
+            if (bankAccount.Id == 0)
+            {
+                moneyPilotContext.BankAccounts.Add(bankAccount);
+            }
             await moneyPilotContext.SaveChangesAsync();
         }
 
