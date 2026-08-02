@@ -54,5 +54,11 @@ namespace MoneyPilot.Infrastructure.Repos
         {
             return moneyPilotContext.ExpenseCategories.AsQueryable();
         }
+
+        public Task DeleteAccountAsync(BankAccount bankAccount)
+        {
+            moneyPilotContext.BankAccounts.Remove(bankAccount);
+            return moneyPilotContext.SaveChangesAsync();
+        }
     }
 }

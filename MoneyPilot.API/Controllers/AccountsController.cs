@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MoneyPilot.Application.BankAccounts.Add;
+using MoneyPilot.Application.BankAccounts.Delete;
 using MoneyPilot.Application.BankAccounts.Get;
 using MoneyPilot.Application.BankAccounts.Search;
 using MoneyPilot.Application.BankAccounts.Update;
@@ -28,6 +29,14 @@ namespace MoneyPilot.API.Controllers
             command.UserId = userId;
             command.AccountId = id;
             var result = await mediator.SendAsync<UpdateAccountCommand, CustomResponse<UpdateAccountResult>>(command);
+            return result.GetResponse();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAccount(int userId, int id)
+        {
+            var command = new DeleteAccountCommand(userId, id);
+            var result = await mediator.SendAsync<DeleteAccountCommand, CustomResponse<DeleteAccountResult>>(command);
             return result.GetResponse();
         }
 
