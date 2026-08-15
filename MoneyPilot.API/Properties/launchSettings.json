@@ -8,6 +8,15 @@
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5195"
     },
+    "https": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:7071"
+    },
     "MoneyPilot": {
       "commandName": "Project",
       "environmentVariables": {
@@ -15,7 +24,7 @@
       },
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "scalar",
       "applicationUrl": "https://localhost:7184;http://localhost:5195"
     },
     "IIS Express": {

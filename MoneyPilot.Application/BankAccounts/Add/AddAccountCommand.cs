@@ -8,6 +8,6 @@ namespace MoneyPilot.Application.BankAccounts.Add
     public record AddAccountCommand(string HolderName, long AccountNumber, decimal Balance)
     {
         [JsonIgnore]
-        public  int  UserId { get; set; }
+        public Guid UserOId { get; set; }
     }
 }

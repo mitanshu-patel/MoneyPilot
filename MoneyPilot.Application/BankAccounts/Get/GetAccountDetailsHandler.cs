@@ -15,7 +15,7 @@ namespace MoneyPilot.Application.BankAccounts.Get
             try
             {
                 var accountDetail = await moneyPilotRepo.GetBankAccounts()
-                                    .Where(v => v.Id == command.Id && v.UserId == command.UserId)
+                                    .Where(v => v.Id == command.Id && v.User.UserOId == command.UserOId)
                                     .Select(v => new AccountDetailsDto
                                     {
                                         Id = v.Id,
@@ -26,11 +26,11 @@ namespace MoneyPilot.Application.BankAccounts.Get
 
                 if (accountDetail == null)
                 {
-                    logger.LogWarning("No account details found for Id: {Id} and UserId: {UserId}", command.Id, command.UserId);
+                    logger.LogWarning("No account details found for Id: {Id} and UserId: {UserId}", command.Id, command.UserOId);
                     return CustomHttpResult.NotFound<GetAccountDetailsResult>("Account details not found.");
 
                 }
-                logger.LogInformation("Successfully retrieved account details for Id: {Id} and UserId: {UserId}", command.Id, command.UserId);
+                logger.LogInformation("Successfully retrieved account details for Id: {Id} and UserId: {UserId}", command.Id, command.UserOId);
                 return CustomHttpResult.Ok<GetAccountDetailsResult>(new(accountDetail));
             }
             catch (Exception ex) 

@@ -13,5 +13,7 @@ namespace MoneyPilot.Application.Services
         Task<RefreshTokenResponse> GenerateNewTokenAsync(Guid userOId, string email);
 
         Task<(RefreshTokenResponse? RefreshToken, string ErrorMessage)> GenerateJwtAndRefreshTokenAsync(string accessToken, string refreshToken);
+
+        (string errorCode, string errorMessage, bool isValid) ValidateToken(string token);
     }
 }

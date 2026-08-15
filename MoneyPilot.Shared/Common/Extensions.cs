@@ -1,10 +1,7 @@
 ﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace MoneyPilot.Shared.Common
 {
@@ -34,6 +31,19 @@ namespace MoneyPilot.Shared.Common
             }
 
             return valueSection.GetValue<T>(valueKey);
+        }
+
+        public static string GetCurrentUserIdFromAuthorizationHeader(this HttpRequest request)
+        {
+            if(!request.Headers.TryGetValue("Authorization", out var authHeader))
+            {
+                return string.Empty;
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDetails = tokenHandler.ReadJwtToken(authHeader.ToString().Replace("Bearer ", ""));
+            var userId = tokenDetails.Claims.Where(v=>v.Type == "userId").Select(v => v.Value).FirstOrDefault();
+            return userId ?? string.Empty;
         }
     }
 }

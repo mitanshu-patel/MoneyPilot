@@ -4,5 +4,5 @@ using System.Text;
 
 namespace MoneyPilot.Application.BankAccounts.Get
 {
-    public record GetAccountDetailsQuery(int UserId, int Id);
+    public record GetAccountDetailsQuery(Guid UserOId, int Id);
 }

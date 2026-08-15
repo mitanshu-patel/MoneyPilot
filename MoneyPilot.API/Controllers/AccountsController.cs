@@ -5,53 +5,84 @@ using MoneyPilot.Application.BankAccounts.Delete;
 using MoneyPilot.Application.BankAccounts.Get;
 using MoneyPilot.Application.BankAccounts.Search;
 using MoneyPilot.Application.BankAccounts.Update;
+using MoneyPilot.Application.Filters;
 using MoneyPilot.Shared.Common;
 using MoneyPilot.Shared.Contracts;
 
 namespace MoneyPilot.API.Controllers
 {
-    [Route("api/Users/{userId}/Accounts")]
+    [Route("api/Accounts")]
     [ApiController]
+    [TypeFilter(typeof(CustomAuthorizeFilter))]
     public class AccountsController(IMediator mediator) : ControllerBase
     {
-        // Authorize pending, custom authorization logic will be required.
         [HttpPost]
-        public async Task<IActionResult> AddNewAccount(int userId, [FromBody] AddAccountCommand command)
+        public async Task<IActionResult> AddNewAccount([FromBody] AddAccountCommand command)
         {
-            command.UserId = userId;
+            var userOid = Request.GetCurrentUserIdFromAuthorizationHeader();
+            if (string.IsNullOrEmpty(userOid))
+            {
+                return Unauthorized();
+            }
+
+            command.UserOId = Guid.Parse(userOid);
             var result = await mediator.SendAsync<AddAccountCommand, CustomResponse<AddAccountResult>>(command);
             return result.GetResponse();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAccount(int userId, int id, [FromBody] UpdateAccountCommand command)
+        public async Task<IActionResult> UpdateAccount(int id, [FromBody] UpdateAccountCommand command)
         {
-            command.UserId = userId;
+            var userOid = Request.GetCurrentUserIdFromAuthorizationHeader();
+            if (string.IsNullOrEmpty(userOid))
+            {
+                return Unauthorized();
+            }
+
+            command.UserOId = Guid.Parse(userOid);
             command.AccountId = id;
             var result = await mediator.SendAsync<UpdateAccountCommand, CustomResponse<UpdateAccountResult>>(command);
             return result.GetResponse();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount(int userId, int id)
+        public async Task<IActionResult> DeleteAccount(int id)
         {
-            var command = new DeleteAccountCommand(userId, id);
+            var userOid = Request.GetCurrentUserIdFromAuthorizationHeader();
+            if (string.IsNullOrEmpty(userOid))
+            {
+                return Unauthorized();
+            }
+
+            var command = new DeleteAccountCommand(Guid.Parse(userOid), id);
             var result = await mediator.SendAsync<DeleteAccountCommand, CustomResponse<DeleteAccountResult>>(command);
             return result.GetResponse();
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAccountDetails(int userId, int id)
+        public async Task<IActionResult> GetAccountDetails(int id)
         {
-            var command = new GetAccountDetailsQuery(userId, id);
+            var userOid = Request.GetCurrentUserIdFromAuthorizationHeader();
+            if (string.IsNullOrEmpty(userOid))
+            {
+                return Unauthorized();
+            }
+
+            var command = new GetAccountDetailsQuery(Guid.Parse(userOid), id);
             var result = await mediator.SendAsync<GetAccountDetailsQuery, CustomResponse<GetAccountDetailsResult>>(command);
             return result.GetResponse();
         }
 
         [HttpGet("search")] // temporarily keeping GET, will introduce other filters and pagination in the future and change it to POST.
-        public async Task<IActionResult> SearchAccounts(int userId)
+        public async Task<IActionResult> SearchAccounts()
         {
-            var command = new SearchAccountsCommand(userId);
+            var userOid = Request.GetCurrentUserIdFromAuthorizationHeader();
+            if (string.IsNullOrEmpty(userOid))
+            {
+                return Unauthorized();
+            }
+
+            var command = new SearchAccountsCommand(Guid.Parse(userOid));
             var result = await mediator.SendAsync<SearchAccountsCommand, CustomResponse<SearchAccountsResult>>(command);
             return result.GetResponse();
         }

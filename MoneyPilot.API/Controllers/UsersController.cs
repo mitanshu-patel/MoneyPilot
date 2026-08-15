@@ -14,6 +14,7 @@ namespace MoneyPilot.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddNewUser([FromBody] AddUserCommand command)
         {
+           
             var result = await mediator.SendAsync<AddUserCommand, CustomResponse<AddUserResult>>(command);
             return result.GetResponse();
         }

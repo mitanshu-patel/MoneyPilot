@@ -4,5 +4,5 @@ using System.Text;
 
 namespace MoneyPilot.Application.BankAccounts.Delete
 {
-    public record DeleteAccountCommand(int UserId, int Id);
+    public record DeleteAccountCommand(Guid UserOId, int Id);
 }

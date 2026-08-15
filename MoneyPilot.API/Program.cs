@@ -10,6 +10,7 @@ using MoneyPilot.Shared.Contracts;
 using MoneyPilot.Shared.EncryptionDecryption;
 using MoneyPilot.Shared.Helpers;
 using MoneyPilot.Shared.Services;
+using Scalar.AspNetCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +22,8 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Value.Split(";")).AllowAnyHeader().AllowAnyMethod();
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Value ?? "";
+        policy.WithOrigins(allowedOrigins.Split(";", StringSplitOptions.RemoveEmptyEntries)).AllowAnyHeader().AllowAnyMethod();
     });
 });
 
@@ -30,8 +32,11 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // 2. Map the OpenAPI JSON endpoint (/openapi/v1.json)
+    app.MapOpenApi();
+
+    // 3. Map the interactive UI (Scalar UI at /scalar/v1)
+    app.MapScalarApiReference();
 }
 
 app.UseCors();

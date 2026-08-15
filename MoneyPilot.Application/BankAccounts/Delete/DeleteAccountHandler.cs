@@ -13,23 +13,23 @@ namespace MoneyPilot.Application.BankAccounts.Delete
     {
         protected override async Task<CustomResponse<DeleteAccountResult>> ExecuteCommandAsync(DeleteAccountCommand command)
         {
-            logger.LogInformation("Deleting account with Id {Id} for UserId {UserId}.", command.Id, command.UserId);
+            logger.LogInformation("Deleting account with Id {Id} for UserId {UserId}.", command.Id, command.UserOId);
             try
             {
-                var account = await moneyPilotRepo.GetBankAccounts().Where(v => v.Id == command.Id && v.UserId == command.UserId).FirstOrDefaultAsync();
+                var account = await moneyPilotRepo.GetBankAccounts().Where(v => v.Id == command.Id && v.User.UserOId == command.UserOId).FirstOrDefaultAsync();
                 if(account == null)
                 {
-                    logger.LogWarning("Account with Id {Id} for UserId {UserId} not found.", command.Id, command.UserId);
+                    logger.LogWarning("Account with Id {Id} for UserId {UserId} not found.", command.Id, command.UserOId);
                     return CustomHttpResult.NotFound<DeleteAccountResult>($"Account not found.");
                 }
 
                 await moneyPilotRepo.DeleteAccountAsync(account);
-                logger.LogInformation("Account with Id {Id} for UserId {UserId} deleted successfully.", command.Id, command.UserId);
+                logger.LogInformation("Account with Id {Id} for UserId {UserId} deleted successfully.", command.Id, command.UserOId);
                 return CustomHttpResult.Ok(new DeleteAccountResult());
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred while deleting the account with Id {Id} for UserId {UserId}.", command.Id, command.UserId);
+                logger.LogError(ex, "An error occurred while deleting the account with Id {Id} for UserId {UserId}.", command.Id, command.UserOId);
                 throw;
             }
         }
@@ -42,8 +42,6 @@ namespace MoneyPilot.Application.BankAccounts.Delete
         protected override IValidator<DeleteAccountCommand> GetValidator()
         {
             var validator = new InlineValidator<DeleteAccountCommand>();
-            validator.RuleFor(x => x.UserId)
-                .GreaterThan(0).WithMessage("UserId must be greater than 0.");
             validator.RuleFor(x => x.Id)
                 .GreaterThan(0).WithMessage("Id must be greater than 0.");
             return validator;

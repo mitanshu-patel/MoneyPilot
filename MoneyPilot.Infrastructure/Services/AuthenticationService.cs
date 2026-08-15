@@ -13,7 +13,7 @@ using System.Text;
 
 namespace MoneyPilot.Infrastructure.Services
 {
-    
+
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IMoneyPilotRepo moneyPilotRepo;
@@ -39,7 +39,7 @@ namespace MoneyPilot.Infrastructure.Services
         public async Task<(RefreshTokenResponse? RefreshToken, string ErrorMessage)> GenerateJwtAndRefreshTokenAsync(string accessToken, string refreshToken)
         {
             var accessTokenClaims = this.GetClaims(accessToken);
-            if(accessTokenClaims.Count == 0)
+            if (accessTokenClaims.Count == 0)
             {
                 return (null, "Invalid Access Token");
             }
@@ -60,7 +60,7 @@ namespace MoneyPilot.Infrastructure.Services
 
             var userId = refreshTokenClaims.FirstOrDefault(v => v.Type == "userId")?.Value ?? string.Empty;
             var userGuid = Guid.Parse(userId);
-            var email = refreshTokenClaims.FirstOrDefault(v => v.Type == "username")?.Value ?? string.Empty;
+            var email = refreshTokenClaims.FirstOrDefault(v => v.Type == "email")?.Value ?? string.Empty;
             var jti = this.GetJti(accessToken);
             var refreshTokenDetail = await this.moneyPilotRepo.GetRefreshTokens()
                                                         .FirstOrDefaultAsync(v =>
@@ -68,7 +68,7 @@ namespace MoneyPilot.Infrastructure.Services
                                                         v.UserId == userGuid &&
                                                         v.Email == email);
 
-            if(refreshTokenDetail == null)
+            if (refreshTokenDetail == null)
             {
                 return (null, "Refresh Token not matched");
             }
@@ -96,7 +96,7 @@ namespace MoneyPilot.Infrastructure.Services
 
         public async Task<RefreshTokenResponse> GenerateNewTokenAsync(Guid userId, string email)
         {
-           
+
             var (tokenId, accessToken) = this.IssueJWT(email, userId, accessTokenExpirationMinutes);
             var (_, refreshTokenValue) = this.IssueJWT(email, userId, refreshTokenExpirationMinutes);
             var encryptedTokenValue = this.encryptionDecryptionService.EncryptSecret(refreshTokenValue);
@@ -129,7 +129,7 @@ namespace MoneyPilot.Infrastructure.Services
                 IssuerSigningKey = new SymmetricSecurityKey(key)
             }, out _);
 
-            return claimsPrincipal?.Claims.Where(v => v.Type== "username" || v.Type == "userId").ToList() ?? [];
+            return claimsPrincipal?.Claims.Where(v => v.Type == "email" || v.Type == "userId").ToList() ?? [];
         }
 
         private (string jwtId, string token) IssueJWT(string user, Guid userId, int expirationMinutes)
@@ -139,7 +139,7 @@ namespace MoneyPilot.Infrastructure.Services
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim("username", user),
+                    new Claim("email", user),
                     new Claim("role", "User"),
                     new Claim("userId", userId.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -168,6 +168,31 @@ namespace MoneyPilot.Infrastructure.Services
         public string IssueJWT(Guid userId, int expirationMinutes)
         {
             throw new NotImplementedException();
+        }
+
+        public (string errorCode, string errorMessage, bool isValid) ValidateToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            if (this.IsTokenExpired(token))
+            {
+                return ("TOKEN_EXPIRED", "Token is expired", false);
+            }
+
+            var claims = this.GetClaims(token);
+
+            if(claims.Count == 0)
+            {
+                return ("TOKEN_INVALID", "Token is invalid", false);
+            }
+
+            return (string.Empty, string.Empty, true);
+        }
+
+        private bool IsTokenExpired(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+            return jwtToken.ValidTo < DateTime.UtcNow;
         }
     }
 }

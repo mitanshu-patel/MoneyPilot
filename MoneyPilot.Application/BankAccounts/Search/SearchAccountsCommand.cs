@@ -4,5 +4,5 @@ using System.Text;
 
 namespace MoneyPilot.Application.BankAccounts.Search
 {
-    public record SearchAccountsCommand(int UserId);
+    public record SearchAccountsCommand(Guid UserOId);
 }

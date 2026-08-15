@@ -14,13 +14,16 @@ namespace MoneyPilot.Application.BankAccounts.Add
     {
         protected override async Task<CustomResponse<AddAccountResult>> ExecuteCommandAsync(AddAccountCommand command)
         {
-            logger.LogInformation("Executing AddAccountCommand for UserId: {UserId}", command.UserId);
+            logger.LogInformation("Executing AddAccountCommand for UserId: {UserId}", command.UserOId);
             try
             {
-                var userExist = await moneyPilotRepo.GetUsers().AnyAsync(t => t.Id == command.UserId);
-                if (!userExist)
+                var userDetail = await moneyPilotRepo.GetUsers()
+                                .Where(t => t.UserOId == command.UserOId)
+                                .Select(t=>new {t.Id})
+                                .FirstOrDefaultAsync();
+                if (userDetail == null)
                 {
-                    logger.LogWarning("User not found for UserId: {UserId}", command.UserId);
+                    logger.LogWarning("User not found for UserId: {UserId}", command.UserOId);
                     return CustomHttpResult.NotFound<AddAccountResult>("User not found.");
                 }
 
@@ -33,19 +36,19 @@ namespace MoneyPilot.Application.BankAccounts.Add
 
                 var account = new BankAccount
                 {
-                    UserId = command.UserId,
+                    UserId = userDetail.Id,
                     HolderName = command.HolderName,
                     AccountNumber = command.AccountNumber,
                     Balance = command.Balance
                 };
 
                 await moneyPilotRepo.SaveBankAccountAsync(account);
-                logger.LogInformation("Account added successfully for UserId: {UserId}, AccountNumber: {AccountNumber}", command.UserId, command.AccountNumber);
+                logger.LogInformation("Account added successfully for UserId: {UserId}, AccountNumber: {AccountNumber}", command.UserOId, command.AccountNumber);
                 return CustomHttpResult.Ok<AddAccountResult>(new(account.Id));
             }
             catch(Exception ex)
             {
-                logger.LogError(ex, "Error occurred while adding account for UserId: {UserId}", command.UserId);
+                logger.LogError(ex, "Error occurred while adding account for UserId: {UserId}", command.UserOId);
                 throw;
             }
         }
@@ -58,7 +61,6 @@ namespace MoneyPilot.Application.BankAccounts.Add
         protected override IValidator<AddAccountCommand> GetValidator()
         {
             var validator = new InlineValidator<AddAccountCommand>();
-            validator.RuleFor(x => x.UserId).GreaterThan(0).WithMessage("UserId must be greater than 0.");
             validator.RuleFor(x => x.HolderName).NotEmpty().WithMessage("HolderName is required.");
             validator.RuleFor(x => x.AccountNumber).GreaterThan(0).WithMessage("AccountNumber must be greater than 0.");
             return validator;

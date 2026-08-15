@@ -1,5 +1,7 @@
 ﻿using Azure.Monitor.OpenTelemetry.Exporter;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 using MoneyPilot.Application;
 using MoneyPilot.Application.Services;
 using MoneyPilot.Infrastructure;
@@ -75,9 +77,45 @@ namespace MoneyPilot.API
                 options.JsonSerializerOptions.PropertyNamingPolicy = null; // Keeps PascalCase
             });
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
+
+            services.AddOpenApi(options =>
+            {
+                // Define the Bearer security scheme globally
+                options.AddDocumentTransformer((document, context, cancellationToken) =>
+                {
+                    document.Components ??= new OpenApiComponents();
+                    document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+                    document.Components.SecuritySchemes["Bearer"] = new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer",
+                        In = ParameterLocation.Header,
+                        BearerFormat = "JWT"
+                    };
+
+                    return Task.CompletedTask;
+                });
+
+                // Apply security requirement only to operations with CustomAuthorizeFilter
+                options.AddOperationTransformer((operation, context, cancellationToken) =>
+                {
+                    var hasCustomAuthorize = context.Description.ActionDescriptor.FilterDescriptors
+                        .Any(fd => fd.Filter is Microsoft.AspNetCore.Mvc.TypeFilterAttribute tfa &&
+                                   tfa.ImplementationType?.Name == "CustomAuthorizeFilter");
+
+                    if (hasCustomAuthorize)
+                    {
+                        operation.Security ??= new List<OpenApiSecurityRequirement>();
+                        operation.Security.Add(new OpenApiSecurityRequirement
+                        {
+                            [new OpenApiSecuritySchemeReference("Bearer", null)] = []
+                        });
+                    }
+
+                    return Task.CompletedTask;
+                });
+            });
         }
     }
 }
