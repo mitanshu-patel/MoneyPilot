@@ -10,7 +10,7 @@ namespace MoneyPilot.Domain.Entities
 
         public string Description { get; set; }
 
-        public DateOnly? AutoDebitDate { get; set; } // in case of EMIs, subscriptions, mutual funds, SIPs, etc.
+        public int? AutoDebitDay { get; set; } // in case of EMIs, subscriptions, mutual funds, SIPs, etc.
 
         public decimal Amount { get; set; }
 

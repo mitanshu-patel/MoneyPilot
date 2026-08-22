@@ -10,6 +10,8 @@ namespace MoneyPilot.Domain.Entities
 
         public string Category { get; set; }
 
+        public bool HasAutoPayment { get; set; } = false;
+
         public List<Expense> Expenses { get; set; }
     }
 }

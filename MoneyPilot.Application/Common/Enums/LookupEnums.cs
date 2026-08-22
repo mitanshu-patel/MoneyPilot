@@ -5,5 +5,6 @@
         None = 0,
         ExpenseCategory = 1,
         InvestmentCategory = 2,
+        Accounts = 3,
     }
 }

@@ -20,5 +20,13 @@ namespace MoneyPilot.Application
         public IQueryable<ExpenseCategory> GetExpenseCategories();
 
         public Task DeleteAccountAsync(BankAccount bankAccount);
+
+        public IQueryable<Investment> GetInvestments();
+
+        public Task SaveInvestmentAsync(Investment investment);
+
+        public Task DeleteInvestmentAsync(Investment investment);
+
+        public Task DeleteExpenseAsync(Expense expense);
     }
 }

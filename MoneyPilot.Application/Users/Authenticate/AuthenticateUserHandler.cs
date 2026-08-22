@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MoneyPilot.Application.Common.DTOs;
 using MoneyPilot.Application.Services;
 using MoneyPilot.Shared.Common;
 using System;
@@ -10,9 +11,9 @@ using System.Text;
 
 namespace MoneyPilot.Application.Users.Authenticate
 {
-    public class AuthenticateUserHandler(IMoneyPilotRepo moneyPilotRepo, IAuthenticationService authenticationService, ILogger<AuthenticateUserHandler> logger) : RequestHandlerBase<AuthenticateUserCommand, CustomResponse<AuthenticateUserResult>>
+    public class AuthenticateUserHandler(IMoneyPilotRepo moneyPilotRepo, IAuthenticationService authenticationService, ILogger<AuthenticateUserHandler> logger) : RequestHandlerBase<AuthenticateUserCommand, CustomResponse<RefreshTokenResponse>>
     {
-        protected async override Task<CustomResponse<AuthenticateUserResult>> ExecuteCommandAsync(AuthenticateUserCommand command)
+        protected async override Task<CustomResponse<RefreshTokenResponse>> ExecuteCommandAsync(AuthenticateUserCommand command)
         {
             logger.LogDebug("Executing AuthenticateUserHandler for Email: {Email}", command.Email);
             try
@@ -24,18 +25,18 @@ namespace MoneyPilot.Application.Users.Authenticate
                 if (user == null)
                 {
                     logger.LogWarning("User not found for Email: {Email}", command.Email);
-                    return CustomHttpResult.NotFound<AuthenticateUserResult>("User not found.");
+                    return CustomHttpResult.NotFound<RefreshTokenResponse>("User not found.");
                 }
 
                 if (user.Password != hashPassword)
                 {
                     logger.LogWarning("Invalid password for Email: {Email}", command.Email);
-                    return CustomHttpResult.UnAuthorized<AuthenticateUserResult>("Invalid Email or Password.");
+                    return CustomHttpResult.UnAuthorized<RefreshTokenResponse>("Invalid Email or Password.");
                 }
 
                 var tokenDetail = await authenticationService.GenerateNewTokenAsync(user.UserOId, user.Email);
                 logger.LogInformation("User authenticated successfully for Email: {Email}", command.Email);
-                return CustomHttpResult.Ok<AuthenticateUserResult>(new(user.Id, tokenDetail));
+                return CustomHttpResult.Ok<RefreshTokenResponse>(tokenDetail);
             }
             catch (Exception ex)
             {
@@ -44,9 +45,9 @@ namespace MoneyPilot.Application.Users.Authenticate
             }
         }
 
-        protected override CustomResponse<AuthenticateUserResult> GetValidationFailedResult(ValidationResult validationResult)
+        protected override CustomResponse<RefreshTokenResponse> GetValidationFailedResult(ValidationResult validationResult)
         {
-            return validationResult.GetValidationResult<AuthenticateUserResult>();
+            return validationResult.GetValidationResult<RefreshTokenResponse>();
         }
 
         protected override IValidator<AuthenticateUserCommand> GetValidator()

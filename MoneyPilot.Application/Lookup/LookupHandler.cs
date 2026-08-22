@@ -23,6 +23,9 @@ namespace MoneyPilot.Application.Lookup
                     LookupTypeEnums.ExpenseCategory => moneyPilotRepo
                     .GetExpenseCategories()
                     .Select(x => new LookupDto(x.Id, x.Category)),
+                    LookupTypeEnums.Accounts => moneyPilotRepo
+                   .GetBankAccounts()
+                   .Select(x => new LookupDto(x.Id, $"{x.HolderName} ({x.AccountNumber})")),
                     LookupTypeEnums.None => throw new NotImplementedException(),
                     _ => throw new ArgumentOutOfRangeException(nameof(command.LookupType), "Invalid lookup type.")
                 };

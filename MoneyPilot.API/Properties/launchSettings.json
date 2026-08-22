@@ -1,22 +1,5 @@
 {
   "profiles": {
-    "http": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5195"
-    },
-    "https": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "applicationUrl": "https://localhost:7071"
-    },
     "MoneyPilot": {
       "commandName": "Project",
       "environmentVariables": {
@@ -27,14 +10,6 @@
       "launchUrl": "scalar",
       "applicationUrl": "https://localhost:7184;http://localhost:5195"
     },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {

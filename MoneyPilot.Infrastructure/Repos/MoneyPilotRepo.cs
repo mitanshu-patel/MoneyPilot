@@ -60,5 +60,31 @@ namespace MoneyPilot.Infrastructure.Repos
             moneyPilotContext.BankAccounts.Remove(bankAccount);
             return moneyPilotContext.SaveChangesAsync();
         }
+
+        public IQueryable<Investment> GetInvestments()
+        {
+           return moneyPilotContext.Investments.AsQueryable();
+        }
+
+        public Task SaveInvestmentAsync(Investment investment)
+        {
+            if(investment.Id == 0)
+            {
+                moneyPilotContext.Investments.Add(investment);
+            }
+            return moneyPilotContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteInvestmentAsync(Investment investment)
+        {
+            moneyPilotContext.Investments.Remove(investment);
+            await moneyPilotContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteExpenseAsync(Expense expense)
+        {
+            moneyPilotContext.Expenses.Remove(expense);
+            await moneyPilotContext.SaveChangesAsync();
+        }
     }
 }

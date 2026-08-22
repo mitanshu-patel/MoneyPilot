@@ -13,6 +13,9 @@ namespace MoneyPilot.Infrastructure
 
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<Expense> Expenses { get; set; }
+
+        public DbSet<Investment> Investments { get; set; }
+
         public DbSet<User> Users { get; set; }
 
         public DbSet<ExpenseCategory> ExpenseCategories { get; set; }
